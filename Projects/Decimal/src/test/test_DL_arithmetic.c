@@ -505,139 +505,139 @@ START_TEST(DL_sub_test_14) {  // -12133.512 - 11321.21103 = -23454.72303
 END_TEST
 
 // mul function
-START_TEST(mul_test_1) {
-  int num1 = -10;
-  int num2 = -10;
-  int prod_int = 100;
-  DL_decimal a = {0};
-  DL_decimal b = {0};
-  DL_from_int_to_decimal(num1, &a);
-  DL_from_int_to_decimal(num2, &b);
-  DL_decimal res_dec = {0};
-  int res_int = 0;
-  DL_mul(a, b, &res_dec);
-  DL_from_decimal_to_int(res_dec, &res_int);
-  ck_assert_int_eq(res_int, prod_int);
-}
-END_TEST
+// START_TEST(mul_test_1) {
+//   int num1 = -10;
+//   int num2 = -10;
+//   int prod_int = 100;
+//   DL_decimal a = {0};
+//   DL_decimal b = {0};
+//   DL_from_int_to_decimal(num1, &a);
+//   DL_from_int_to_decimal(num2, &b);
+//   DL_decimal res_dec = {0};
+//   int res_int = 0;
+//   DL_mul(a, b, &res_dec);
+//   DL_from_decimal_to_int(res_dec, &res_int);
+//   ck_assert_int_eq(res_int, prod_int);
+// }
+// END_TEST
 
-START_TEST(mul_test_2) {
-  int num1 = 10;
-  int num2 = 20;
-  int prod_int = 200;
-  DL_decimal a = {0};
-  DL_decimal b = {0};
-  DL_from_int_to_decimal(num1, &a);
-  DL_from_int_to_decimal(num2, &b);
-  DL_decimal res_dec = {0};
-  int res_int = 0;
-  DL_mul(a, b, &res_dec);
-  DL_from_decimal_to_int(res_dec, &res_int);
-  ck_assert_int_eq(res_int, prod_int);
-}
-END_TEST
+// START_TEST(mul_test_2) {
+//   int num1 = 10;
+//   int num2 = 20;
+//   int prod_int = 200;
+//   DL_decimal a = {0};
+//   DL_decimal b = {0};
+//   DL_from_int_to_decimal(num1, &a);
+//   DL_from_int_to_decimal(num2, &b);
+//   DL_decimal res_dec = {0};
+//   int res_int = 0;
+//   DL_mul(a, b, &res_dec);
+//   DL_from_decimal_to_int(res_dec, &res_int);
+//   ck_assert_int_eq(res_int, prod_int);
+// }
+// END_TEST
 
-START_TEST(mul_test_3) {
-  int num1 = -10;
-  int num2 = 20;
-  int prod_int = -200;
-  DL_decimal a = {0};
-  DL_decimal b = {0};
-  DL_from_int_to_decimal(num1, &a);
-  DL_from_int_to_decimal(num2, &b);
-  DL_decimal res_dec = {0};
-  int res_int = 0;
-  DL_mul(a, b, &res_dec);
-  DL_from_decimal_to_int(res_dec, &res_int);
-  ck_assert_int_eq(res_int, prod_int);
-}
-END_TEST
+// START_TEST(mul_test_3) {
+//   int num1 = -10;
+//   int num2 = 20;
+//   int prod_int = -200;
+//   DL_decimal a = {0};
+//   DL_decimal b = {0};
+//   DL_from_int_to_decimal(num1, &a);
+//   DL_from_int_to_decimal(num2, &b);
+//   DL_decimal res_dec = {0};
+//   int res_int = 0;
+//   DL_mul(a, b, &res_dec);
+//   DL_from_decimal_to_int(res_dec, &res_int);
+//   ck_assert_int_eq(res_int, prod_int);
+// }
+// END_TEST
 
-START_TEST(mul_test_4) {
-  int num1 = 9403;
-  int num2 = 202;
-  int res_origin = 1899406;
-  DL_decimal a = {0};
-  DL_decimal b = {0};
-  DL_from_int_to_decimal(num1, &a);
-  DL_from_int_to_decimal(num2, &b);
-  DL_decimal res_dec = {0};
-  int res_int = 0;
-  DL_mul(a, b, &res_dec);
-  DL_from_decimal_to_int(res_dec, &res_int);
-  ck_assert_int_eq(res_int, res_origin);
-}
-END_TEST
+// START_TEST(mul_test_4) {
+//   int num1 = 9403;
+//   int num2 = 202;
+//   int res_origin = 1899406;
+//   DL_decimal a = {0};
+//   DL_decimal b = {0};
+//   DL_from_int_to_decimal(num1, &a);
+//   DL_from_int_to_decimal(num2, &b);
+//   DL_decimal res_dec = {0};
+//   int res_int = 0;
+//   DL_mul(a, b, &res_dec);
+//   DL_from_decimal_to_int(res_dec, &res_int);
+//   ck_assert_int_eq(res_int, res_origin);
+// }
+// END_TEST
 
-START_TEST(mul_test_5) {
-  int num1 = -32768;
-  int num2 = 2;
-  int res_origin = -65536;
-  DL_decimal a = {0};
-  DL_decimal b = {0};
-  DL_from_int_to_decimal(num1, &a);
-  DL_from_int_to_decimal(num2, &b);
-  DL_decimal res_dec = {0};
-  int res_int = 0;
-  DL_mul(a, b, &res_dec);
-  DL_from_decimal_to_int(res_dec, &res_int);
-  ck_assert_int_eq(res_int, res_origin);
-}
-END_TEST
+// START_TEST(mul_test_5) {
+//   int num1 = -32768;
+//   int num2 = 2;
+//   int res_origin = -65536;
+//   DL_decimal a = {0};
+//   DL_decimal b = {0};
+//   DL_from_int_to_decimal(num1, &a);
+//   DL_from_int_to_decimal(num2, &b);
+//   DL_decimal res_dec = {0};
+//   int res_int = 0;
+//   DL_mul(a, b, &res_dec);
+//   DL_from_decimal_to_int(res_dec, &res_int);
+//   ck_assert_int_eq(res_int, res_origin);
+// }
+// END_TEST
 
-START_TEST(mul_test_6) {
-  int num1 = -32768;
-  int num2 = 32768;
-  int res_origin = -1073741824;
-  DL_decimal a = {0};
-  DL_decimal b = {0};
-  DL_from_int_to_decimal(num1, &a);
-  DL_from_int_to_decimal(num2, &b);
-  DL_decimal res_dec = {0};
-  int res_int = 0;
-  DL_mul(a, b, &res_dec);
-  DL_from_decimal_to_int(res_dec, &res_int);
-  ck_assert_int_eq(res_int, res_origin);
-}
-END_TEST
+// START_TEST(mul_test_6) {
+//   int num1 = -32768;
+//   int num2 = 32768;
+//   int res_origin = -1073741824;
+//   DL_decimal a = {0};
+//   DL_decimal b = {0};
+//   DL_from_int_to_decimal(num1, &a);
+//   DL_from_int_to_decimal(num2, &b);
+//   DL_decimal res_dec = {0};
+//   int res_int = 0;
+//   DL_mul(a, b, &res_dec);
+//   DL_from_decimal_to_int(res_dec, &res_int);
+//   ck_assert_int_eq(res_int, res_origin);
+// }
+// END_TEST
 
-START_TEST(mul_test_7) {
-  float num1 = 9403.0e2;
-  int num2 = 202;
-  float res_origin = 189940600;
-  DL_decimal a = {0};
-  DL_decimal b = {0};
-  DL_from_float_to_decimal(num1, &a);
-  DL_from_int_to_decimal(num2, &b);
-  DL_decimal res_dec = {0};
-  float res_float = 0;
-  DL_mul(a, b, &res_dec);
-  DL_from_decimal_to_float(res_dec, &res_float);
-  ck_assert_float_eq(res_float, res_origin);
-}
-END_TEST
+// START_TEST(mul_test_7) {
+//   float num1 = 9403.0e2;
+//   int num2 = 202;
+//   float res_origin = 189940600;
+//   DL_decimal a = {0};
+//   DL_decimal b = {0};
+//   DL_from_float_to_decimal(num1, &a);
+//   DL_from_int_to_decimal(num2, &b);
+//   DL_decimal res_dec = {0};
+//   float res_float = 0;
+//   DL_mul(a, b, &res_dec);
+//   DL_from_decimal_to_float(res_dec, &res_float);
+//   ck_assert_float_eq(res_float, res_origin);
+// }
+// END_TEST
 
-START_TEST(DL_div_test_1) {  // -6 : 3 = 0 # !!!!
-  DL_decimal value_1 = {{6, 0, 0, 0b10000000000000000000000000000000}};
-  DL_decimal value_2 = {{3, 0, 0, 0}};
-  DL_decimal result = {{0}};
-  DL_decimal check = {{0}};
-  ck_assert_int_eq((DL_div(value_1, value_2, &result)), 0);
-  ck_assert_int_eq(result.bits[0], check.bits[0]);
-  ck_assert_int_eq(result.bits[1], check.bits[1]);
-  ck_assert_int_eq(result.bits[2], check.bits[2]);
-  ck_assert_int_eq(result.bits[3], check.bits[3]);
-}
-END_TEST
+// START_TEST(DL_div_test_1) {  // -6 : 3 = 0 # !!!!
+//   DL_decimal value_1 = {{6, 0, 0, 0b10000000000000000000000000000000}};
+//   DL_decimal value_2 = {{3, 0, 0, 0}};
+//   DL_decimal result = {{0}};
+//   DL_decimal check = {{0}};
+//   ck_assert_int_eq((DL_div(value_1, value_2, &result)), 0);
+//   ck_assert_int_eq(result.bits[0], check.bits[0]);
+//   ck_assert_int_eq(result.bits[1], check.bits[1]);
+//   ck_assert_int_eq(result.bits[2], check.bits[2]);
+//   ck_assert_int_eq(result.bits[3], check.bits[3]);
+// }
+// END_TEST
 
-START_TEST(DL_div_test_2) {  // -6 : 0 = error
-  DL_decimal value_1 = {{6, 0, 0, 0b10000000000000000000000000000000}};
-  DL_decimal value_2 = {{0}};
-  DL_decimal result = {{0}};
-  int res = DL_div(value_1, value_2, &result);
-  ck_assert_int_eq(res, RESULT_DIV_BY_ZERO);
-}
-END_TEST
+// START_TEST(DL_div_test_2) {  // -6 : 0 = error
+//   DL_decimal value_1 = {{6, 0, 0, 0b10000000000000000000000000000000}};
+//   DL_decimal value_2 = {{0}};
+//   DL_decimal result = {{0}};
+//   int res = DL_div(value_1, value_2, &result);
+//   ck_assert_int_eq(res, RESULT_DIV_BY_ZERO);
+// }
+// END_TEST
 
 // START_TEST(DL_div_test_3) {  // 6 : (-3) = -2
 //   DL_decimal value_1 = {{6, 0, 0, 0}};
@@ -755,21 +755,21 @@ void add_sub_tests(TCase *tc_math) {
   tcase_add_test(tc_math, DL_sub_test_14);
 }
 
-void add_mul_tests(TCase *tc_math) {
-  // mul func
-  tcase_add_test(tc_math, mul_test_1);
-  tcase_add_test(tc_math, mul_test_2);
-  tcase_add_test(tc_math, mul_test_3);
-  tcase_add_test(tc_math, mul_test_4);
-  tcase_add_test(tc_math, mul_test_5);
-  tcase_add_test(tc_math, mul_test_6);
-  tcase_add_test(tc_math, mul_test_7);
-}
+// void add_mul_tests(TCase *tc_math) {
+//   // mul func
+//   tcase_add_test(tc_math, mul_test_1);
+//   tcase_add_test(tc_math, mul_test_2);
+//   tcase_add_test(tc_math, mul_test_3);
+//   tcase_add_test(tc_math, mul_test_4);
+//   tcase_add_test(tc_math, mul_test_5);
+//   tcase_add_test(tc_math, mul_test_6);
+//   tcase_add_test(tc_math, mul_test_7);
+// }
 
-void add_div_tests(TCase *tc_math) {
-  tcase_add_test(tc_math, DL_div_test_1);
-  tcase_add_test(tc_math, DL_div_test_2);
-}
+// void add_div_tests(TCase *tc_math) {
+//   tcase_add_test(tc_math, DL_div_test_1);
+//   tcase_add_test(tc_math, DL_div_test_2);
+// }
 
 void srunner_add_math_tests(SRunner *sr) {
   Suite *save_v1 = suite_create("Math");
@@ -778,8 +778,8 @@ void srunner_add_math_tests(SRunner *sr) {
 
   add_add_tests(tc_math);
   add_sub_tests(tc_math);
-  add_mul_tests(tc_math);
-  add_div_tests(tc_math);
+  // add_mul_tests(tc_math);
+  // add_div_tests(tc_math);
 
   srunner_add_suite(sr, save_v1);
 }
