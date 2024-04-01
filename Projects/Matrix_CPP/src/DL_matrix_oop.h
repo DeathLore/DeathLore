@@ -55,6 +55,8 @@ class DLMatrix {
   void SetRows(int rows);
   void SetCols(int cols);
 
+  // additional methods
+
   friend bool DL_eq_rac(DLMatrix const* const A, DLMatrix const* const B);
   friend DLMatrix DL_pre_minor_calc(DLMatrix const* const A, int row,
                                       int cols) noexcept;
