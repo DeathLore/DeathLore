@@ -21,7 +21,7 @@ all: test gcov_report
 
 # сборка библиотеки
 DL_decimal.a: clean
-	$(CC) -c functions/DL_*.c functions/helpers.c
+	$(CC) -c functions/DL_*.c
 	ar rcs DL_decimal.a *.o
 	ranlib DL_decimal.a
 
