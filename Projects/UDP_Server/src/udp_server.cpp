@@ -7,10 +7,9 @@
 #include <iostream>
 #include <chrono>
 
+#define REC_DATA_SIZE (1500 + 1)
 
 namespace asio = boost::asio;
-
-// MY VARIANT
 
 std::string* get_ip4() {
   static std::string ip4 = "127.0.0.1";
@@ -32,123 +31,103 @@ void change_port(std::string new_port) {
   *get_port() = new_port;
 }
 
-// void udp_server_output(std::string& received_data) {
-//   time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-//   std::cout << "[" << std::put_time(localtime(&now), "%F %T") << "] Received: " << received_data << std::endl;
-// }
-
-// /*asio::awaitable<void>*/void udp_server_read(asio::ip::udp::socket& udp_socket) {
-//   std::string received_data;
-//   received_data.reserve(1500 + 1);
-//   std::cout << "1.1" << std::endl;
-
-//   udp_socket.async_receive(asio::buffer(received_data, 1500),
-//     [&received_data](boost::system::error_code ec, std::size_t length) {
-//       std::cout << "1.2" << std::endl;
-//       if (ec) {
-//         std::cerr << ec.message() << ec.what() << std::endl;
-//         std::cout << "1.3" << std::endl;
-//         return;
-//       }
-
-//       received_data.back() = '\0';
-//       std::cout << "1.3" << std::endl;
-
-//       if (strcmp(received_data.c_str(), "\n") == 0) {
-//         return;
-//       }
-//       std::cout << "1.4" << std::endl;
-
-//       udp_server_output(received_data);
-//     }
-//   );
-
-//   // co_await udp_server_output(received_data);
-// }
-
-// /*asio::awaitable<void>*/void listen_clients(asio::io_context& io_content) {
-// //   const auto executor = co_await asio::this_coro::executor;
-  
-
-//   asio::ip::udp::endpoint servers_endpoint(asio::ip::udp::v4(), 9997/*atoi(get_port()->c_str())*/); // also listens on ipv4
-//   servers_endpoint.address(asio::ip::make_address_v4("127.0.0.1"/*get_ip4()*/));
-
-// //   std::cout << "Ip4: " << *get_ip4() << " Port: " << atoi(get_port()->c_str()) << std::endl;
-//   asio::ip::udp::socket udp_socket(/*executor*/io_content, servers_endpoint);
-  
-  
-// //   asio::ip::udp::resolver udp_resolver(executor);  
-
-//   // for (;;) {
-//     /*co_await*/ udp_server_read(udp_socket);
-//   // }
-// }
-
 struct UdpServer {
   explicit UdpServer(asio::ip::udp::socket socket)
     : udp_server_socket(std::move(socket)) { }
 
-  void server_receive_data() {
-    udp_server_socket.async_receive(asio::buffer(received_data, 1500),
-      [this](boost::system::error_code ec, std::size_t length) {
+  asio::awaitable<void> server_receive_data() {
+    asio::ip::udp::endpoint connected_endpoint;
 
-        if (ec) {
-          std::cerr << ec.message() << ec.what() << std::endl;
-          return;
-        }
-
-        received_data[length] = '\0';
-
-        if (strcmp(received_data, "\n") == 0) {
-          return;
-        }
-
-        this->redirect_data_in_cout();
-      }
+    udp_server_socket.async_receive_from(asio::buffer(received_data, REC_DATA_SIZE - 1), connected_endpoint,
+      std::bind(&UdpServer::redirect_data_in_cout, this, std::placeholders::_1, std::placeholders::_2)
     );
+
+    co_return;
   }
+
+  asio::io_context server_ioContext;
+
 private:
-  void redirect_data_in_cout() {
+  void redirect_data_in_cout(boost::system::error_code error_code, std::size_t length) {
+    if (error_code) {
+      std::cerr << error_code.message() << "\n" << error_code.what() << std::endl;
+      return;
+    }
+    received_data[length] = '\0';
+
+    if (strcmp(received_data, "\n") == 0) {
+      return;
+    }
+
+    // Getting current time
     time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::cout << "[" << std::put_time(localtime(&now), "%F %T") << "] Received: " << received_data << std::endl;
+
+    // Flushing received_data after use
+    memset(received_data, 0, REC_DATA_SIZE);
   }
 
   asio::ip::udp::socket udp_server_socket;
   asio::ip::udp::endpoint server_endpoint;
-  char received_data[1500 + 1];
+  char received_data[REC_DATA_SIZE];
 };
 
-void runUDPServer() {
-  asio::io_context ioContext;
+asio::awaitable<void> start_listen(asio::ip::udp::endpoint& server_endpoint, asio::io_context& ioContext) {
+  // const auto executor = co_await asio::this_coro::executor;
 
+  // Getting current context
+  asio::io_context listening_context;
+  
+  // Making servers socket
+  asio::ip::udp::socket udp_socket(listening_context, server_endpoint);
+  UdpServer LocalUDPServer(std::move(udp_socket));
+
+  
+  asio::co_spawn(listening_context, LocalUDPServer.server_receive_data(), asio::detached);
+  listening_context.run(); // Forcing async_receive to use handler
+  
+  co_return;
+}
+
+asio::awaitable<void> runUDPServer(asio::io_context& ioContext) {
+  // Getting coroutine's context
+  const auto executor = co_await asio::this_coro::executor;
+  
+  // Setting up UDP server's IPv4 address and port
   asio::ip::udp::endpoint server_endpoint(asio::ip::udp::v4(), atoi(get_port()->c_str()));
   server_endpoint.address(asio::ip::make_address_v4(*get_ip4()));
 
-  asio::ip::udp::socket udp_socket(ioContext, server_endpoint);
+  for (;;) {
+    // Spawning coroutines for receiving data
+    asio::co_spawn(executor, start_listen(server_endpoint, ioContext), asio::detached);
+  }
 
-  UdpServer LocalUDPServer(std::move(udp_socket));
-
-  // bool receiving = false;
-
-  LocalUDPServer.server_receive_data();
-  
-  // /*asio::co_spawn(ioContext, */listen_clients(ioContext)/*, asio::detached)*/;
-
-  ioContext.run();
-
+  co_return;
 }
 
 
 int main(int argc, char **argv) {
   char exit_status = EXIT_SUCCESS;
   try {
+    // Checks if address and port were inserted
     if (argc != 3)
       throw std::domain_error("Usage: udp_server <address> <port>");
 
     change_ip4(argv[1]);
     change_port(argv[2]);
 
-    runUDPServer();
+    boost::system::error_code er_code;
+    // Validating inserted IPv4 address
+    asio::ip::address::from_string(*get_ip4(), er_code);
+    if(er_code)
+      throw std::domain_error("Invalid IPv4 address!");
+
+    asio::io_context ioContext;
+
+    // Spawning main coroutine
+    asio::co_spawn(ioContext, runUDPServer(ioContext), asio::detached);
+
+    ioContext.run();
   } catch (const std::exception& ex) {
     exit_status = EXIT_FAILURE;
 
