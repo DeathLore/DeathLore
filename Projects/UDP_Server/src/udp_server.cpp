@@ -26,6 +26,21 @@ std::string* get_port() {
 
 void change_port(std::string new_port) { *get_port() = new_port; }
 
+void validate_port() {
+  asio::io_service ioContent;
+  asio::ip::udp::socket testing_socket(ioContent);
+
+  boost::system::error_code error_code;
+  testing_socket.open(asio::ip::udp::v4(), error_code) ||
+      testing_socket.bind({asio::ip::address::from_string(*get_ip4()),
+                           (asio::ip::port_type)atoi(get_port()->c_str())},
+                          error_code);
+
+  if (error_code) {
+    throw std::domain_error("This port is already busy, try another.");
+  }
+}
+
 struct UdpServer {
   explicit UdpServer(asio::ip::udp::socket socket)
       : udp_server_socket(std::move(socket)) {}
@@ -117,12 +132,14 @@ int main(int argc, char** argv) {
 
     if (atoi(argv[1]) <= 0) throw std::domain_error("Wrong server's port.");
 
-    change_port(argv[2]);
     change_ip4(argv[1]);
     boost::system::error_code er_code;
     // Validating inserted IPv4 address
     asio::ip::address::from_string(*get_ip4(), er_code);
     if (er_code) throw std::domain_error("Invalid IPv4 address!");
+
+    change_port(argv[2]);
+    validate_port();
 
     asio::io_context ioContext;
 
