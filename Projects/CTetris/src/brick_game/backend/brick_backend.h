@@ -40,6 +40,7 @@ typedef struct {
   //* Game field where located all objects
   //* Max Y - 20
   //* Max X - 10
+  //* Point (0, 0) is at upper left corner
   int **field;
   int **next;
   //* Players Score

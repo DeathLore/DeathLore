@@ -6,6 +6,7 @@ void collide_sequences();
 int check_lines(ExtGameInfo_t *GameObject);
 void move_field_after_check(GameInfo_t *GameObject, int affected_lines[4]);
 void changeSpeedTimer(ExtGameInfo_t *GameObject);
+void og_ascending_bubble_sort_1DArray(int *Array, size_t A_size);
 
 typedef void (*fsm_action)(ExtGameInfo_t *prms);
 
@@ -177,35 +178,45 @@ void collide_sequences() {
   }
 }
 
+// NO_LINE != x : 0 <= x < BOARD_Y
+#define NO_LINE 99
+
 int check_lines(ExtGameInfo_t *GameObject) {
   int lines_filled = 0;
-  int affected_lines[4] = {0};
+  int affected_lines[4] = {NO_LINE, NO_LINE, NO_LINE, NO_LINE};
 
+  // Parsing affected lines sequential
   for (int block = 0, line = 0; block < 4; ++block) {
     line = GameObject->curent_figure.blocks_position[block][1];
 
+    // Filling lines in affected_lines array
     for (int counter = 0; counter < 4; ++counter) {
-      if (affected_lines[counter] == line)
-        counter = 6;
-      else if (affected_lines[counter] == 0) {
+      // Found new line and slot -> saving line and next block
+      if (affected_lines[counter] == NO_LINE) {
         affected_lines[counter] = line;
-        counter = 6;
-      }
+        break;
+        // Line already stored -> next block
+      } else if (affected_lines[counter] == line)
+        break;
     }
   }
 
-  for (int line = 0; line < 4; ++line) {
+  // Checking affected lines
+  for (int line = 0, row = 0; line < 4; ++line) {
+    row = affected_lines[line];
+    if (row == NO_LINE) continue;
+
     int filled = TRUE;
     for (int column = 0; column < BOARD_X && filled == TRUE; ++column) {
-      if (GameObject->GameInfo->field[affected_lines[line]][column] == 0)
-        filled = FALSE;
+      if (GameObject->GameInfo->field[row][column] == 0) filled = FALSE;
     }
 
     if (filled == TRUE)
       lines_filled += 1;
     else
-      affected_lines[line] = 0;
+      affected_lines[line] = NO_LINE;
   }
+  og_ascending_bubble_sort_1DArray(affected_lines, 4);
 
   move_field_after_check(GameObject->GameInfo, affected_lines);
 
@@ -213,15 +224,32 @@ int check_lines(ExtGameInfo_t *GameObject) {
 }
 
 void move_field_after_check(GameInfo_t *GameObject, int affected_lines[4]) {
-  for (int af_line_counter = 0; af_line_counter < 4; ++af_line_counter) {
-    for (int rows = affected_lines[af_line_counter];
-         rows >= 0 && affected_lines[af_line_counter] != 0; --rows)
+  for (int affected_line_counter = 0; affected_line_counter < 4;
+       ++affected_line_counter) {
+    if (affected_lines[affected_line_counter] == NO_LINE) continue;
+    for (int rows = affected_lines[affected_line_counter]; rows >= 0; --rows)
       for (int cols = 0; cols < BOARD_X; ++cols) {
-        if (rows > 0)
+        if (rows != 0)
           GameObject->field[rows][cols] = GameObject->field[rows - 1][cols];
         else
           GameObject->field[rows][cols] = 0;
       }
+  }
+}
+
+void og_ascending_bubble_sort_1DArray(int Array[], size_t A_size) {
+  char swapped = 'f';
+  for (size_t x = 0, sort_count; x < A_size - 1; ++x) {
+    for (sort_count = 0; sort_count < A_size - x - 1; ++sort_count)
+      if (Array[sort_count] > Array[sort_count + 1]) {
+        int tmp = Array[sort_count];
+        Array[sort_count] = Array[sort_count + 1];
+        Array[sort_count + 1] = tmp;
+
+        swapped = 't';
+      }
+
+    if (swapped == 'f') break;
   }
 }
 
@@ -257,7 +285,6 @@ void gameover(ExtGameInfo_t *prms) {
 
 void exitstate(ExtGameInfo_t *prms) { prms->state = EXIT_STATE; }
 
-// TO DO sub 'rotate_*' funcs
 void rotate(ExtGameInfo_t *prms) {
   int should_screen_change = 0;
   switch (prms->curent_figure.block_type) {
