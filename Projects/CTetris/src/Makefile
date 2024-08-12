@@ -56,6 +56,9 @@ unistall: clean del_saves
 del_saves:
 	@$(RM) games_data
 
+dvi_open:
+	open docs/html/index.html
+
 dvi: dvi_clean
 	doxygen docs/Doxyfile
 	mv html docs
