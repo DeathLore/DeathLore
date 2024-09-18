@@ -49,3 +49,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+info
+
+# Projects
+Projects/CTetris/src/games
+
+!Projects/CTetris/src/games/.gitkeep
