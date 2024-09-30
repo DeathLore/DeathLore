@@ -68,7 +68,7 @@ dvi_clean:
 	$(RM) docs/html docs/latex
 
 dist: install
-	tar -czvf Tetris.tar.gz ./tetris
+	tar -czvf Tetris.tar.gz games/tetris
 
 clang_fix:
 	@clang-format -style=Google -i brick_game/backend/*.? brick_game/tetris/*.? gui/cli/*.? tests/test.c
