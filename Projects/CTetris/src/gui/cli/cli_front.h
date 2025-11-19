@@ -1,6 +1,8 @@
 #ifndef CLI_FRONT_H
 #define CLI_FRONT_H
 
+// TEST
+
 #include <ncurses.h>
 
 #ifdef TETRIS
