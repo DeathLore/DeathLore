@@ -46,12 +46,12 @@ char check_timer_for_loops(OG_timer_t* const timer_to_check);
 /**
  * @brief Takes difference between to timesec values.
  *
- * @param[out] result difference result
- * @param[in] operand_1 minuend value
- * @param[in] operand_2 subtrahend value
+ * @param[out] result difference result; expects pointer tp stack variable.
+ * @param[in] x minuend value
+ * @param[in] y subtrahend value
  */
-void timespec_variables_difference(struct timespec* result,
-                                   struct timespec operand_1,
-                                   struct timespec operand_2);
+void timespec_variables_difference(struct timespec* const result,
+                                   struct timespec const x,
+                                   struct timespec const y);
 
 #endif

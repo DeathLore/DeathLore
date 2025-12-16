@@ -59,15 +59,15 @@ char check_timer(OG_timer_t* const timer_to_check) {
   return result_value;
 }
 
-void timespec_variables_difference(struct timespec* result,
-                                   struct timespec operand_1,
-                                   struct timespec operand_2) {
-  // TO DO: refactor part with magic number
-  if (operand_1.tv_nsec - operand_2.tv_nsec < 0) {
-    result->tv_sec = operand_1.tv_sec - operand_2.tv_sec - 1;
-    result->tv_nsec = 1000000000 + operand_1.tv_nsec - operand_2.tv_nsec; // WTH?
-  } else {
-    result->tv_sec = operand_1.tv_sec - operand_2.tv_sec;
-    result->tv_nsec = operand_1.tv_nsec - operand_2.tv_nsec;
+void timespec_variables_difference(struct timespec* const result,
+                                   struct timespec const x,
+                                   struct timespec const y) {
+  result->tv_sec = x.tv_sec - y.tv_sec;
+  result->tv_nsec = x.tv_nsec - y.tv_nsec;
+
+  // Normalize if negative
+  if (result->tv_nsec < 0) {
+    --(result->tv_sec);
+    result->tv_nsec += 1000000000; // 1 sec to nsec
   }
 }
