@@ -1,4 +1,5 @@
-#include "finite_machine_logic.h"
+#include "./finite_machine_logic.h"
+#include "./defines_tetris.h"
 
 // This is a finite state machine realization based on matrix of "actions".
 
@@ -273,9 +274,9 @@ void moveleft(ExtGameInfo_t *prms) {
 
 void gameover(ExtGameInfo_t *prms) {
   if (prms->GameInfo->high_score < prms->GameInfo->score)
-    saveHighScoreInfo(prms->GameInfo->score);
+    saveHighScoreInfo(prms->GameInfo->score, TetrisGame);
 
-  deleteGameField(prms->GameInfo);
+  GameFieldCleanup(prms->GameInfo, BOARD_Y);
 
 #ifndef TESTING
   print_gameover();

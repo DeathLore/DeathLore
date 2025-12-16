@@ -1,11 +1,12 @@
-#include "tetris_game.h"
+#include "./tetris_game.h"
+#include "./defines_tetris.h"
 
 int main() {
   WIN_INIT(5)
   srand(time(NULL));
   OG_timer_t graphic_timer, game_logic_timer;
-  init_timer(&graphic_timer, 0, 33000000);
-  init_timer(&game_logic_timer, 0, 10000000);
+  OG_timer_init(&graphic_timer, 0, 33000000);
+  OG_timer_init(&game_logic_timer, 0, 10000000);
   ExtGameInfo_t* ExtendedGameObject = ExtendedGameObjectInitialization();
   print_game_start();
 
@@ -24,7 +25,7 @@ int main() {
     }
   }
 
-  deleteGameField(ExtendedGameObject->GameInfo);
+  GameFieldCleanup(ExtendedGameObject->GameInfo, BOARD_Y);
 
   endwin();
 

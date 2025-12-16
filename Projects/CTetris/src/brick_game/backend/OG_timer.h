@@ -19,19 +19,20 @@ typedef struct {
 
 /**
  * @brief Starting timer
+ * @details Sets current time and delay. No heap used.
  *
- * @param[out] initd_timer timer that would be initialised
+ * @param[out] initd_timer timer that would be initialised; expects pointer to stack variable.
  * @param[in] delay_sec how many seconds have to be passed
  * @param[in] delay_nsec how many nano seconds have to be passed (sec 1e-9)
  */
-void init_timer(OG_timer_t* initd_timer, int delay_sec, int delay_nsec);
+void OG_timer_init(OG_timer_t* const initd_timer, const int delay_sec, const int delay_nsec);
 /**
  * @brief Checking timer. If delay passed - timer expires.
  *
  * @param[in] timer_to_check timer who's info used to check time difference.
  * @return char - if time passed returns 'y'; else 'n'.
  */
-char check_timer(OG_timer_t timer_to_check);
+char check_timer(OG_timer_t* const timer_to_check);
 /**
  * @brief Checking timer. If delay passed - timer starts again with the same
  * delay and start_time when function restarted.
@@ -40,7 +41,7 @@ char check_timer(OG_timer_t timer_to_check);
  * and restarts.
  * @return char - if time passed returns 'y'; else 'n'.
  */
-char check_timer_for_loops(OG_timer_t* timer_to_check);
+char check_timer_for_loops(OG_timer_t* const timer_to_check);
 
 /**
  * @brief Takes difference between to timesec values.

@@ -1,4 +1,4 @@
-#include "tetris_frontend.h"
+#include "./tetris_frontend.h"
 
 void print_debug_info() {
   ExtGameInfo_t const* const GameObject = getExtGameObject();
@@ -31,6 +31,7 @@ void print_game() {
   refresh();
 }
 
+// TO DO: Not unified function; works only with _cli (ncurses).
 void print_controls_keys() {
   MVPRINTW(13, FRONT_BOARD_X + HUD_WIDTH + 5, "Controls >");
   MVPRINTW(14, FRONT_BOARD_X + HUD_WIDTH + 5, "_________");
@@ -45,6 +46,7 @@ void print_controls_keys() {
            "'p' - pause; 'c' - show/hide controls keys");
 }
 
+// TO DO: Not unified function; works only with _cli (ncurses).
 void print_game_start() {
   print_overlay(FALSE, FALSE, TRUE, FALSE, FALSE);
 
@@ -60,6 +62,7 @@ void print_game_start() {
   refresh();
 }
 
+// TO DO: Not unified function; works only with _cli (ncurses).
 void print_gameover() {
   print_overlay(TRUE, TRUE, TRUE, FALSE, FALSE);
 
@@ -72,6 +75,7 @@ void print_gameover() {
   refresh();
 }
 
+// TO DO: Not unified function; works only with _cli (ncurses).
 void flush_print() {
   // Next figure
   for (int rows = 0; rows < 4; ++rows)
@@ -95,6 +99,7 @@ void flush_print() {
     }
 }
 
+// TO DO: Not unified function; works only with _cli (ncurses).
 void print_next_block() {
   MVPRINTW(13, FRONT_BOARD_X + 4, "NEXT FIGURE:");
   print_rectangle(14, 19, FRONT_BOARD_X + 3, FRONT_BOARD_X + 3 + 9);
@@ -114,6 +119,7 @@ void print_next_block() {
   }
 }
 
+// TO DO: Not unified function; works only with _cli (ncurses).
 void print_board() {
   const ExtGameInfo_t* GameObject = getExtGameObject();
 

@@ -1,21 +1,13 @@
 #ifndef BRICK_BACKEND_H
 #define BRICK_BACKEND_H
 
-#ifdef CLI
-#include <ncurses.h>
-#else
-#include <ncurses.h>
-#endif
-
-#ifdef TETRIS
-#include "../tetris/defines_tetris.h"
-#else
-#include "../tetris/defines_tetris.h"
-#endif
-
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+// Includes stat(); used to create folder and file inside it.
+#include <sys/stat.h>
 
-#include "OG_timer.h"
+#include "./OG_timer.h"
 
 /**
  * @brief Keys that are used in the game
@@ -30,6 +22,11 @@ typedef enum {
   Down,
   Action  //* Space button
 } UserAction_t;
+
+typedef enum {
+  TetrisGame,
+  BrickGameSize
+} BrickGame_t;
 
 #define NOSIG 8
 
@@ -73,6 +70,27 @@ GameInfo_t *getGameObject();
  */
 GameInfo_t updateCurrentState();
 
-void deleteGameField(GameInfo_t *GameObject);
+void GameFieldCleanup(GameInfo_t *GameObject, const int board_y);
+
+/**
+ * @brief Returns saved HighScore.
+ * In case of problem with reading file returns '-1'.
+ *
+ * @return int - returns HighScore or error (-1).
+ */
+int readHighScoreInfo(BrickGame_t const ByGame);
+
+/**
+ * @brief Saving HighScore in '.gd' file inside 'games_data' folder.
+ *
+ * @param HighScore Game's HighScore that have to be saved.
+ */
+void saveHighScoreInfo(int HighScore, BrickGame_t const ByGame);
+
+/**
+ * @brief Creates '.gd' file inside folder 'games_data' to store HighScore info.
+ * If folder doesn't exists - it would be created.
+ */
+void createHighScoreInfoStorage(BrickGame_t const ByGame);
 
 #endif

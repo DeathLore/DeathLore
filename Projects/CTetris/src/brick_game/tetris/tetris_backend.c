@@ -1,4 +1,4 @@
-#include "tetris_backend.h"
+#include "./tetris_backend.h"
 
 ExtGameInfo_t* getExtGameObject() {
   static ExtGameInfo_t ExtGameObject = {0};
@@ -13,11 +13,11 @@ ExtGameInfo_t* ExtendedGameObjectInitialization() {
   InitializedObject->GameInfo = getGameObject();
   InitializedObject->action = NOSIG;
   InitializedObject->previous_action = NOSIG;
-  InitializedObject->control_button_hold = FALSE;
+  InitializedObject->control_button_hold = false;
   choose_tetris_figure(rand() % 7, &(InitializedObject->next_figure));
   InitializedObject->state = Start;
-  InitializedObject->screen_changed = FALSE;
-  InitializedObject->show_controls_keys = FALSE;
+  InitializedObject->screen_changed = false;
+  InitializedObject->show_controls_keys = false;
 
   GameObjectInitialization();
 
@@ -37,8 +37,8 @@ void GameObjectInitialization() {
 
   int HighScore_buffer = 0;
 #ifndef TESTING
-  if ((HighScore_buffer = readHighScoreInfo()) == -1) {
-    createHighScoreInfoStorage();
+  if ((HighScore_buffer = readHighScoreInfo(TetrisGame)) == -1) {
+    createHighScoreInfoStorage(TetrisGame);
     HighScore_buffer = 0;
   }
 #endif
@@ -46,7 +46,7 @@ void GameObjectInitialization() {
 
   InitializedObject->level = 1;
   InitializedObject->speed = 0;
-  InitializedObject->pause = FALSE;
+  InitializedObject->pause = false;
 }
 
 void figure_insertion(TetrisFigure_t* figure, int figure_field[4][2],
@@ -105,67 +105,31 @@ void choose_tetris_figure(char figure_number,
   }
 }
 
-int readHighScoreInfo() {
-  int HighScore = 0;
-
-  FILE* HighScoreFile = fopen("./games_data/tetris.gd", "r");
-
-  if (HighScoreFile != NULL) {
-    fscanf(HighScoreFile, "%d", &HighScore);
-    fclose(HighScoreFile);
-  } else
-    HighScore = -1;
-
-  return HighScore;
-}
-
-void saveHighScoreInfo(int HighScore) {
-  FILE* HighScoreFile = fopen("./games_data/tetris.gd", "w");
-
-  if (HighScoreFile != NULL) {
-    fprintf(HighScoreFile, "%d", HighScore);
-    fclose(HighScoreFile);
-  }
-}
-
-void createHighScoreInfoStorage() {
-  struct stat avoidingError;
-  if (stat("./games_data", &avoidingError) == -1) {
-    mkdir("./games_data", 0700);
-  }
-
-  FILE* HighScoreFile = fopen("./games_data/tetris.gd", "w");
-  if (HighScoreFile != NULL) {
-    fprintf(HighScoreFile, "%d", 0);
-    fclose(HighScoreFile);
-  }
-}
-
 void changeDropTimer(ExtGameInfo_t* GameObject) {
   if (GameObject->GameInfo->level == 1)
-    init_timer(&(GameObject->figure_drop_timer), 2, 0);
+    OG_timer_init(&(GameObject->figure_drop_timer), 2, 0);
   else if (GameObject->GameInfo->level == 2)
-    init_timer(&(GameObject->figure_drop_timer), 1, 950000000);
+    OG_timer_init(&(GameObject->figure_drop_timer), 1, 950000000);
   else if (GameObject->GameInfo->level == 3)
-    init_timer(&(GameObject->figure_drop_timer), 1, 900000000);
+    OG_timer_init(&(GameObject->figure_drop_timer), 1, 900000000);
   else if (GameObject->GameInfo->level == 4)
-    init_timer(&(GameObject->figure_drop_timer), 1, 800000000);
+    OG_timer_init(&(GameObject->figure_drop_timer), 1, 800000000);
   else if (GameObject->GameInfo->level == 5)
-    init_timer(&(GameObject->figure_drop_timer), 1, 650000000);
+    OG_timer_init(&(GameObject->figure_drop_timer), 1, 650000000);
   else if (GameObject->GameInfo->level == 6)
-    init_timer(&(GameObject->figure_drop_timer), 1, 400000000);
+    OG_timer_init(&(GameObject->figure_drop_timer), 1, 400000000);
   else if (GameObject->GameInfo->level == 7)
-    init_timer(&(GameObject->figure_drop_timer), 1, 200000000);
+    OG_timer_init(&(GameObject->figure_drop_timer), 1, 200000000);
   else if (GameObject->GameInfo->level == 8)
-    init_timer(&(GameObject->figure_drop_timer), 1, 0);
+    OG_timer_init(&(GameObject->figure_drop_timer), 1, 0);
   else if (GameObject->GameInfo->level == 9)
-    init_timer(&(GameObject->figure_drop_timer), 0, 800000000);
+    OG_timer_init(&(GameObject->figure_drop_timer), 0, 800000000);
   else if (GameObject->GameInfo->level == 10)
-    init_timer(&(GameObject->figure_drop_timer), 0, 500000000);
+    OG_timer_init(&(GameObject->figure_drop_timer), 0, 500000000);
 }
 
 int check_figure_position(TetrisFigure_t const* const figure_to_check) {
-  int result = TRUE;
+  int result = 1;
 
   GameInfo_t* GameObject = getGameObject();
 
@@ -184,7 +148,7 @@ int check_figure_position(TetrisFigure_t const* const figure_to_check) {
                            [figure_to_check->blocks_position[(int)block][0]];
   }
 
-  if (filled) result = FALSE;
+  if (filled) result = 0;
 
   return result;
 }

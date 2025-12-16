@@ -1,9 +1,7 @@
 #ifndef TETRIS_BACKEND_H
 #define TETRIS_BACKEND_H
 
-// Includes stat(); used to create folder and file inside it.
-#include <sys/stat.h>
-
+#include "../tetris/defines_tetris.h"
 #include "../backend/brick_backend.h"
 
 /**
@@ -81,6 +79,7 @@ ExtGameInfo_t updateExtCurrentState();
 
 /**
  * @brief Sets default values for game's info (extended part).
+ * @details invokes `GameObjectInitialization`; ExtGameInfo_t.GameInfo_t.field - malloced as [BOARD_Y][BOARD_X]
  *
  * @return ExtGameInfo_t* - returns new one ExtGameInfo's example.
  */
@@ -88,29 +87,9 @@ ExtGameInfo_t* ExtendedGameObjectInitialization();
 
 /**
  * @brief Sets default values for game's info (basic part).
+ * @details GameInfo_t.field - malloced as [BOARD_Y][BOARD_X]
  */
 void GameObjectInitialization();
-
-/**
- * @brief Returns saved HighScore.
- * In case of problem with reading file returns '-1'.
- *
- * @return int - returns HighScore or error (-1).
- */
-int readHighScoreInfo();
-
-/**
- * @brief Saving HighScore in '.gd' file inside 'games_data' folder.
- *
- * @param HighScore Game's HighScore that have to be saved.
- */
-void saveHighScoreInfo(int HighScore);
-
-/**
- * @brief Creates '.gd' file inside folder 'games_data' to store HighScore info.
- * If folder doesn't exists - it would be created.
- */
-void createHighScoreInfoStorage();
 
 /**
  * @brief Choosing new tetris figure instead of previous.
