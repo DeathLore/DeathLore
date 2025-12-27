@@ -95,7 +95,7 @@ START_TEST(GameInit) {
   ck_assert_int_eq(GameObject.score, 0);
   ck_assert_int_eq(GameObject.field[5][6], 0);
 
-  deleteGameField(&GameObject);
+  GameFieldCleanup(&GameObject, BOARD_Y);
 }
 END_TEST
 
@@ -111,9 +111,9 @@ START_TEST(ExtGameInit) {
   ck_assert_int_eq(GameObject.previous_action, NOSIG);
   ck_assert_int_eq(GameObject.screen_changed, FALSE);
   ck_assert_int_eq(GameObject.show_controls_keys, FALSE);
-  ck_assert_int_eq(GameObject.state, Start);
+  ck_assert_int_eq(GameObject.state, START);
 
-  deleteGameField(GameObject.GameInfo);
+  GameFieldCleanup(GameObject.GameInfo, BOARD_Y);
 }
 END_TEST
 
@@ -205,27 +205,29 @@ START_TEST(DropTimer) {
   ck_assert_int_eq(GameObject->figure_drop_timer.delay.tv_sec, 0);
   ck_assert_int_eq(GameObject->figure_drop_timer.delay.tv_nsec, 500000000);
 
-  deleteGameField(GameObject->GameInfo);
+  GameFieldCleanup(GameObject->GameInfo, BOARD_Y);
 }
 END_TEST
 
-START_TEST(readfileError) { ck_assert_int_eq(readHighScoreInfo(), -1); }
+START_TEST(readfileError) {
+  ck_assert_int_eq(readHighScoreInfo(TetrisGame), -1);
+}
 END_TEST
 
 START_TEST(createfile) {
-  createHighScoreInfoStorage();
+  createHighScoreInfoStorage(TetrisGame);
 
-  ck_assert_int_eq(readHighScoreInfo(), 0);
+  ck_assert_int_eq(readHighScoreInfo(TetrisGame), 0);
 }
 END_TEST
 
-START_TEST(readfile) { ck_assert_int_eq(readHighScoreInfo(), 0); }
+START_TEST(readfile) { ck_assert_int_eq(readHighScoreInfo(TetrisGame), 0); }
 END_TEST
 
 START_TEST(savefile) {
-  saveHighScoreInfo(5);
+  saveHighScoreInfo(5, TetrisGame);
 
-  ck_assert_int_eq(readHighScoreInfo(), 5);
+  ck_assert_int_eq(readHighScoreInfo(TetrisGame), 5);
 }
 END_TEST
 
@@ -286,7 +288,7 @@ START_TEST(userinput) {
   userInput(Terminate, 0);
   ck_assert_int_eq(GameObject->state, EXIT_STATE);
 
-  deleteGameField(GameObject->GameInfo);
+  GameFieldCleanup(GameObject->GameInfo, BOARD_Y);
 }
 END_TEST
 
@@ -378,22 +380,22 @@ START_TEST(rotate_test) {
   userInput(Action, 0);
   ck_assert_int_eq(GameObject->curent_figure.rotate_case, 0);
 
-  deleteGameField(GameObject->GameInfo);
+  GameFieldCleanup(GameObject->GameInfo, BOARD_Y);
 }
 END_TEST
 
 START_TEST(timer_fast) {
   OG_timer_t timer;
-  init_timer(&timer, 0, 60000000);
+  OG_timer_init(&timer, 0, 60000000);
 
   char for_flag = check_timer_for_loops(&timer),
-       single_flag = check_timer(timer);
+       single_flag = check_timer(&timer);
 
   ck_assert_int_eq((int)for_flag, (int)'n');
   ck_assert_int_eq((int)single_flag, (int)'n');
 
   while (for_flag != 'y') {
-    single_flag = check_timer(timer);
+    single_flag = check_timer(&timer);
     if (single_flag == 'y') for_flag = check_timer_for_loops(&timer);
   }
   ck_assert_int_eq((int)for_flag, (int)'y');
@@ -403,16 +405,16 @@ END_TEST
 
 START_TEST(timer_slow) {
   OG_timer_t timer;
-  init_timer(&timer, 1, 30000000);
+  OG_timer_init(&timer, 1, 30000000);
 
   char for_flag = check_timer_for_loops(&timer),
-       single_flag = check_timer(timer);
+       single_flag = check_timer(&timer);
 
   ck_assert_int_eq((int)for_flag, (int)'n');
   ck_assert_int_eq((int)single_flag, (int)'n');
 
   while (for_flag != 'y') {
-    single_flag = check_timer(timer);
+    single_flag = check_timer(&timer);
     if (single_flag == 'y') for_flag = check_timer_for_loops(&timer);
   }
   ck_assert_int_eq((int)for_flag, (int)'y');

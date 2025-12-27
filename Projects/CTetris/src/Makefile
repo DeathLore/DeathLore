@@ -5,7 +5,7 @@ TESTFLAGS = -lcheck --coverage -fprofile-arcs -ftest-coverage
 DEBUG = -g3 -DDEBUG
 
 ifeq ($(shell uname), Linux)
-TESTFLAGS += -lm -lsubunit
+TESTFLAGS += -lm -lcheck
 endif
 
 
