@@ -1,8 +1,8 @@
 #ifndef TETRIS_BACKEND_H
 #define TETRIS_BACKEND_H
 
-#include "../tetris/defines_tetris.h"
 #include "../backend/brick_backend.h"
+#include "../tetris/defines_tetris.h"
 
 /**
  * @brief Structure that represents figure on field.
@@ -79,7 +79,8 @@ ExtGameInfo_t updateExtCurrentState();
 
 /**
  * @brief Sets default values for game's info (extended part).
- * @details invokes `GameObjectInitialization`; ExtGameInfo_t.GameInfo_t.field - malloced as [BOARD_Y][BOARD_X]
+ * @details invokes `GameObjectInitialization`; ExtGameInfo_t.GameInfo_t.field -
+ * malloced as [BOARD_Y][BOARD_X]
  *
  * @return ExtGameInfo_t* - returns new one ExtGameInfo's example.
  */

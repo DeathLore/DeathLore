@@ -15,7 +15,7 @@ ExtGameInfo_t* ExtendedGameObjectInitialization() {
   InitializedObject->previous_action = NOSIG;
   InitializedObject->control_button_hold = false;
   choose_tetris_figure(rand() % 7, &(InitializedObject->next_figure));
-  InitializedObject->state = Start;
+  InitializedObject->state = 0;
   InitializedObject->screen_changed = false;
   InitializedObject->show_controls_keys = false;
 

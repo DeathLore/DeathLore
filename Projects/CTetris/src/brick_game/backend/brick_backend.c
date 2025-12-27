@@ -36,7 +36,7 @@ void saveHighScoreInfo(int HighScore, BrickGame_t const ByGame) {
     fopen("./games_data/tetris.gd", "w");
   }
 
-  if (HighScoreFile != NULL) { 
+  if (HighScoreFile != NULL) {
     fprintf(HighScoreFile, "%d", HighScore);
     fclose(HighScoreFile);
   }

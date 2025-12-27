@@ -1,45 +1,46 @@
 #include "./finite_machine_logic.h"
+
 #include "./defines_tetris.h"
 
 // This is a finite state machine realization based on matrix of "actions".
 
 void collide_sequences();
-int check_lines(ExtGameInfo_t *GameObject);
-void move_field_after_check(GameInfo_t *GameObject, int affected_lines[4]);
-void changeSpeedTimer(ExtGameInfo_t *GameObject);
-void og_ascending_bubble_sort_1DArray(int *Array, size_t A_size);
+int check_lines(ExtGameInfo_t* GameObject);
+void move_field_after_check(GameInfo_t* GameObject, int affected_lines[4]);
+void changeSpeedTimer(ExtGameInfo_t* GameObject);
+void og_ascending_bubble_sort_1DArray(int* Array, size_t A_size);
 
-typedef void (*fsm_action)(ExtGameInfo_t *prms);
+typedef void (*fsm_action)(ExtGameInfo_t* prms);
 
-void spawn(ExtGameInfo_t *prms);
-void movedown(ExtGameInfo_t *prms);
-void moveright(ExtGameInfo_t *prms);
-void moveleft(ExtGameInfo_t *prms);
-void gameover(ExtGameInfo_t *prms);
-void exitstate(ExtGameInfo_t *prms);
-void pause(ExtGameInfo_t *prms);
-void rotate(ExtGameInfo_t *prms);
-void unpause(ExtGameInfo_t *prms);
+void spawn(ExtGameInfo_t* prms);
+void movedown(ExtGameInfo_t* prms);
+void moveright(ExtGameInfo_t* prms);
+void moveleft(ExtGameInfo_t* prms);
+void gameover(ExtGameInfo_t* prms);
+void exitstate(ExtGameInfo_t* prms);
+void pause(ExtGameInfo_t* prms);
+void rotate(ExtGameInfo_t* prms);
+void unpause(ExtGameInfo_t* prms);
 
-fsm_action fsm_table[7][9] = {
-    {spawn, NULL, exitstate, NULL, NULL, NULL, NULL, NULL, NULL},
-    {spawn, spawn, exitstate, spawn, spawn, spawn, spawn, spawn, spawn},
-    {NULL, pause, exitstate, moveleft, moveright, NULL, movedown, rotate, NULL},
-    {unpause, NULL, exitstate, NULL, NULL, NULL, NULL, NULL, NULL},
-    {gameover, gameover, exitstate, gameover, gameover, gameover, gameover,
+fsm_action fsm_table[TETRIS_STATE_SIZE][USERACTION_SIZE] = {
+    {NULL, spawn, NULL, exitstate, NULL, NULL, NULL, NULL, NULL},
+    {spawn, spawn, spawn, exitstate, spawn, spawn, spawn, spawn, spawn},
+    {NULL, NULL, pause, exitstate, moveleft, moveright, NULL, movedown, rotate},
+    {NULL, unpause, NULL, exitstate, NULL, NULL, NULL, NULL, NULL},
+    {gameover, spawn, gameover, exitstate, gameover, gameover, gameover,
      gameover, gameover},
     {exitstate, exitstate, exitstate, exitstate, exitstate, exitstate,
      exitstate, exitstate, exitstate}};
 
-int rotate_i(TetrisFigure_t *curent_figure);
-int rotate_j(TetrisFigure_t *curent_figure);
-int rotate_l(TetrisFigure_t *curent_figure);
-int rotate_s(TetrisFigure_t *curent_figure);
-int rotate_t(TetrisFigure_t *curent_figure);
-int rotate_z(TetrisFigure_t *curent_figure);
+int rotate_i(TetrisFigure_t* curent_figure);
+int rotate_j(TetrisFigure_t* curent_figure);
+int rotate_l(TetrisFigure_t* curent_figure);
+int rotate_s(TetrisFigure_t* curent_figure);
+int rotate_t(TetrisFigure_t* curent_figure);
+int rotate_z(TetrisFigure_t* curent_figure);
 
 void userInput(UserAction_t action, bool hold) {
-  ExtGameInfo_t *ExtGameObject = getExtGameObject();
+  ExtGameInfo_t* ExtGameObject = getExtGameObject();
 
   ExtGameObject->action = action;
   ExtGameObject->control_button_hold = hold;
@@ -62,7 +63,7 @@ void userInput(UserAction_t action, bool hold) {
 char get_signal(int user_input) {
   char rc = NOSIG;
 #ifdef DEBUG
-  ExtGameInfo_t *GameObject = getExtGameObject();
+  ExtGameInfo_t* GameObject = getExtGameObject();
 #endif
 
   if (user_input == KEY_UP)
@@ -95,7 +96,7 @@ char get_signal(int user_input) {
   return rc;
 }
 
-void spawn(ExtGameInfo_t *prms) {
+void spawn(ExtGameInfo_t* prms) {
   prms->curent_figure.block_type = prms->next_figure.block_type;
   for (int block = 0; block < 4; ++block) {
     prms->curent_figure.blocks_position[block][0] =
@@ -135,7 +136,7 @@ int check_collide(int y_shift, int x_shift) {
   return collided;
 }
 
-void movedown(ExtGameInfo_t *prms) {
+void movedown(ExtGameInfo_t* prms) {
   if (check_collide(1, 0)) {
     prms->state = SPAWN;
 
@@ -156,7 +157,7 @@ void movedown(ExtGameInfo_t *prms) {
 }
 
 void collide_sequences() {
-  ExtGameInfo_t *GameObject = getExtGameObject();
+  ExtGameInfo_t* GameObject = getExtGameObject();
   int lines_filled = check_lines(GameObject);
 
   if (lines_filled == 1) {
@@ -182,7 +183,7 @@ void collide_sequences() {
 // NO_LINE != x : 0 <= x < BOARD_Y
 #define NO_LINE 99
 
-int check_lines(ExtGameInfo_t *GameObject) {
+int check_lines(ExtGameInfo_t* GameObject) {
   int lines_filled = 0;
   int affected_lines[4] = {NO_LINE, NO_LINE, NO_LINE, NO_LINE};
 
@@ -224,7 +225,7 @@ int check_lines(ExtGameInfo_t *GameObject) {
   return lines_filled;
 }
 
-void move_field_after_check(GameInfo_t *GameObject, int affected_lines[4]) {
+void move_field_after_check(GameInfo_t* GameObject, int affected_lines[4]) {
   for (int affected_line_counter = 0; affected_line_counter < 4;
        ++affected_line_counter) {
     if (affected_lines[affected_line_counter] == NO_LINE) continue;
@@ -254,7 +255,7 @@ void og_ascending_bubble_sort_1DArray(int Array[], size_t A_size) {
   }
 }
 
-void moveright(ExtGameInfo_t *prms) {
+void moveright(ExtGameInfo_t* prms) {
   if (!check_collide(0, 1)) {
     for (int block = 0; block < 4; ++block) {
       prms->curent_figure.blocks_position[block][0] += 1;
@@ -263,7 +264,7 @@ void moveright(ExtGameInfo_t *prms) {
   }
 }
 
-void moveleft(ExtGameInfo_t *prms) {
+void moveleft(ExtGameInfo_t* prms) {
   if (!check_collide(0, -1)) {
     for (int block = 0; block < 4; ++block) {
       prms->curent_figure.blocks_position[block][0] -= 1;
@@ -272,7 +273,7 @@ void moveleft(ExtGameInfo_t *prms) {
   }
 }
 
-void gameover(ExtGameInfo_t *prms) {
+void gameover(ExtGameInfo_t* prms) {
   if (prms->GameInfo->high_score < prms->GameInfo->score)
     saveHighScoreInfo(prms->GameInfo->score, TetrisGame);
 
@@ -284,9 +285,9 @@ void gameover(ExtGameInfo_t *prms) {
   ExtendedGameObjectInitialization();
 }
 
-void exitstate(ExtGameInfo_t *prms) { prms->state = EXIT_STATE; }
+void exitstate(ExtGameInfo_t* prms) { prms->state = EXIT_STATE; }
 
-void rotate(ExtGameInfo_t *prms) {
+void rotate(ExtGameInfo_t* prms) {
   int should_screen_change = 0;
   switch (prms->curent_figure.block_type) {
     case i_block:
@@ -321,7 +322,7 @@ void rotate(ExtGameInfo_t *prms) {
   prms->screen_changed = should_screen_change;
 }
 
-int rotate_i(TetrisFigure_t *curent_figure) {
+int rotate_i(TetrisFigure_t* curent_figure) {
   int rotated = 0;
   TetrisFigure_t fig_buffer = {0};
   if (curent_figure->rotate_case == 0) {
@@ -356,7 +357,7 @@ int rotate_i(TetrisFigure_t *curent_figure) {
   return rotated;
 }
 
-int rotate_j(TetrisFigure_t *curent_figure) {
+int rotate_j(TetrisFigure_t* curent_figure) {
   int rotated = 0;
   TetrisFigure_t fig_buffer = {0};
 
@@ -414,7 +415,7 @@ int rotate_j(TetrisFigure_t *curent_figure) {
   return rotated;
 }
 
-int rotate_l(TetrisFigure_t *curent_figure) {
+int rotate_l(TetrisFigure_t* curent_figure) {
   int rotated = 0;
   TetrisFigure_t fig_buffer = {0};
 
@@ -472,7 +473,7 @@ int rotate_l(TetrisFigure_t *curent_figure) {
   return rotated;
 }
 
-int rotate_s(TetrisFigure_t *curent_figure) {
+int rotate_s(TetrisFigure_t* curent_figure) {
   int rotated = 0;
   TetrisFigure_t fig_buffer = {0};
 
@@ -508,7 +509,7 @@ int rotate_s(TetrisFigure_t *curent_figure) {
   return rotated;
 }
 
-int rotate_t(TetrisFigure_t *curent_figure) {
+int rotate_t(TetrisFigure_t* curent_figure) {
   int rotated = 0;
   TetrisFigure_t fig_buffer = {0};
 
@@ -566,7 +567,7 @@ int rotate_t(TetrisFigure_t *curent_figure) {
   return rotated;
 }
 
-int rotate_z(TetrisFigure_t *curent_figure) {
+int rotate_z(TetrisFigure_t* curent_figure) {
   int rotated = 0;
   TetrisFigure_t fig_buffer = {0};
 
@@ -602,7 +603,7 @@ int rotate_z(TetrisFigure_t *curent_figure) {
   return rotated;
 }
 
-void pause(ExtGameInfo_t *prms) {
+void pause(ExtGameInfo_t* prms) {
   prms->state = PAUSE;
   prms->GameInfo->pause = TRUE;
 #ifndef TESTING
@@ -612,7 +613,7 @@ void pause(ExtGameInfo_t *prms) {
 #endif
 }
 
-void unpause(ExtGameInfo_t *prms) {
+void unpause(ExtGameInfo_t* prms) {
   prms->state = MOVING;
   prms->GameInfo->pause = FALSE;
   check_timer_for_loops(&prms->figure_drop_timer);

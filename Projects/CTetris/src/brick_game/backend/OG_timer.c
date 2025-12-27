@@ -1,6 +1,7 @@
 #include "./OG_timer.h"
 
-void OG_timer_init(OG_timer_t* const initd_timer, const int delay_sec, const int delay_nsec) {
+void OG_timer_init(OG_timer_t* const initd_timer, const int delay_sec,
+                   const int delay_nsec) {
   clock_gettime(CLOCK_MONOTONIC, &initd_timer->start_time);
   clock_gettime(CLOCK_MONOTONIC, &initd_timer->current_time);
   initd_timer->delay.tv_nsec = delay_nsec;
@@ -68,6 +69,6 @@ void timespec_variables_difference(struct timespec* const result,
   // Normalize if negative
   if (result->tv_nsec < 0) {
     --(result->tv_sec);
-    result->tv_nsec += 1000000000; // 1 sec to nsec
+    result->tv_nsec += 1000000000;  // 1 sec to nsec
   }
 }

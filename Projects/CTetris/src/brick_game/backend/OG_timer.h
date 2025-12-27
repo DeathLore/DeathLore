@@ -21,11 +21,13 @@ typedef struct {
  * @brief Starting timer
  * @details Sets current time and delay. No heap used.
  *
- * @param[out] initd_timer timer that would be initialised; expects pointer to stack variable.
+ * @param[out] initd_timer timer that would be initialised; expects pointer to
+ * stack variable.
  * @param[in] delay_sec how many seconds have to be passed
  * @param[in] delay_nsec how many nano seconds have to be passed (sec 1e-9)
  */
-void OG_timer_init(OG_timer_t* const initd_timer, const int delay_sec, const int delay_nsec);
+void OG_timer_init(OG_timer_t* const initd_timer, const int delay_sec,
+                   const int delay_nsec);
 /**
  * @brief Checking timer. If delay passed - timer expires.
  *

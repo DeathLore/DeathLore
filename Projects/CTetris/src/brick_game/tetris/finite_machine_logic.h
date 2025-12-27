@@ -15,8 +15,9 @@ typedef enum {
   PAUSE,
   GAMEOVER,
   EXIT_STATE,
-  FILE_ERROR_STATE
-} tetris_state;
+  FILE_ERROR_STATE,
+  TETRIS_STATE_SIZE
+} tetris_state_t;
 
 /**
  * @brief Returns appropriate UserAction_t due to user's input.

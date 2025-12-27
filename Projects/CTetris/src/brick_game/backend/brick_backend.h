@@ -1,9 +1,9 @@
 #ifndef BRICK_BACKEND_H
 #define BRICK_BACKEND_H
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 // Includes stat(); used to create folder and file inside it.
 #include <sys/stat.h>
 
@@ -13,6 +13,7 @@
  * @brief Keys that are used in the game
  */
 typedef enum {
+  NOSIG,
   Start,      //* Enter button
   Pause,      //* 'p' button (English)
   Terminate,  //* ESC button
@@ -20,15 +21,11 @@ typedef enum {
   Right,
   Up,
   Down,
-  Action  //* Space button
+  Action,  //* Space button
+  USERACTION_SIZE
 } UserAction_t;
 
-typedef enum {
-  TetrisGame,
-  BrickGameSize
-} BrickGame_t;
-
-#define NOSIG 8
+typedef enum { TetrisGame, BrickGameSize } BrickGame_t;
 
 /**
  * @brief Structure that keeps common information about game
@@ -38,8 +35,8 @@ typedef struct {
   //* Max Y - 20
   //* Max X - 10
   //* Point (0, 0) is at upper left corner
-  int **field;
-  int **next;
+  int** field;
+  int** next;
   //* Players Score
   int score;
   //* Best score player had
@@ -61,7 +58,7 @@ typedef struct {
  *
  * @return GameInfo_t*
  */
-GameInfo_t *getGameObject();
+GameInfo_t* getGameObject();
 
 /**
  * @brief Get current state of GameInfo.
@@ -70,7 +67,7 @@ GameInfo_t *getGameObject();
  */
 GameInfo_t updateCurrentState();
 
-void GameFieldCleanup(GameInfo_t *GameObject, const int board_y);
+void GameFieldCleanup(GameInfo_t* GameObject, const int board_y);
 
 /**
  * @brief Returns saved HighScore.
